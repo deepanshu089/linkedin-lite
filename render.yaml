@@ -3,7 +3,8 @@ services:
     name: linkedin-lite-backend
     env: node
     rootDir: server
-    startCommand: npm start
+    buildCommand: npm install
+    startCommand: node server.js
     envVars:
       - key: NODE_ENV
         value: production

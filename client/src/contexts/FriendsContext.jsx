@@ -25,20 +25,7 @@ export const FriendsProvider = ({ children }) => {
     setError(null)
     
     try {
-      console.log('Fetching friends...')
-      
       const response = await api.get('/friends')
-      console.log('Friends response:', response.data)
-      console.log('Setting friends:', response.data.friends)
-      console.log('Setting pending requests:', response.data.pendingRequests)
-      
-      // Additional debugging for pending requests
-      if (response.data.pendingRequests && response.data.pendingRequests.length > 0) {
-        console.log('First pending request structure:', response.data.pendingRequests[0])
-        console.log('Pending requests have proper user data:', response.data.pendingRequests.every(req => req.name && req.email))
-        console.log('All pending requests:', response.data.pendingRequests)
-      }
-      
       setFriends(response.data.friends)
       setPendingRequests(response.data.pendingRequests)
       return response.data
@@ -64,9 +51,7 @@ export const FriendsProvider = ({ children }) => {
     setError(null)
     
     try {
-      console.log('Fetching discover users...')
       const response = await api.get('/friends/discover')
-      console.log('Discover response:', response.data)
       setDiscoverUsers(response.data.users)
       return response.data
     } catch (error) {
@@ -88,9 +73,7 @@ export const FriendsProvider = ({ children }) => {
 
   const sendFriendRequest = useCallback(async (userId) => {
     try {
-      console.log('Sending friend request to:', userId)
       const response = await api.post(`/friends/request/${userId}`)
-      console.log('Friend request response:', response.data)
       
       // Show success toast
       showSuccess('Friend request sent successfully!')
@@ -118,9 +101,7 @@ export const FriendsProvider = ({ children }) => {
       // Show success toast
       showSuccess('Friend request accepted!')
       // Refresh friends and pending requests
-      console.log('Refreshing friends list after accepting request')
       await fetchFriends()
-      console.log('Friends list refreshed')
       return { success: true }
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Failed to accept friend request'

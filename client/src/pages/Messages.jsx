@@ -104,20 +104,13 @@ const Messages = () => {
   }
 
   const handleFileSelect = (e) => {
-    console.log('File selection triggered')
-    console.log('Files selected:', e.target.files)
-    
     const files = Array.from(e.target.files)
-    console.log('Files array:', files)
     
     const validFiles = files.filter(file => {
       const isValidType = file.type.startsWith('image/') || file.type.startsWith('video/')
       const isValidSize = file.size <= 10 * 1024 * 1024 // 10MB limit
-      console.log('File validation:', { name: file.name, type: file.type, size: file.size, isValidType, isValidSize })
       return isValidType && isValidSize
     })
-
-    console.log('Valid files:', validFiles)
 
     if (validFiles.length + selectedFiles.length > 5) {
       alert('Maximum 5 files allowed')
@@ -126,7 +119,6 @@ const Messages = () => {
 
     setSelectedFiles(prev => {
       const newFiles = [...prev, ...validFiles]
-      console.log('Updated selected files:', newFiles)
       return newFiles
     })
     
@@ -136,7 +128,6 @@ const Messages = () => {
       reader.onload = (e) => {
         setPreviewUrls(prev => {
           const newUrls = [...prev, { url: e.target.result, file }]
-          console.log('Updated preview URLs:', newUrls)
           return newUrls
         })
       }
@@ -151,15 +142,8 @@ const Messages = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault()
-    console.log('=== SEND MESSAGE TRIGGERED ===')
-    console.log('Message input:', messageInput)
-    console.log('Selected files:', selectedFiles)
-    console.log('Selected files length:', selectedFiles.length)
-    console.log('Sending:', sending)
-    console.log('Current conversation:', currentConversation)
     
     if ((!messageInput.trim() && selectedFiles.length === 0) || sending || !currentConversation) {
-      console.log('Send blocked - conditions not met')
       return
     }
 
@@ -167,7 +151,6 @@ const Messages = () => {
     try {
       let result
       if (selectedFiles.length > 0) {
-        console.log('Handling file upload with', selectedFiles.length, 'files')
         // Handle file upload
         const formData = new FormData()
         // Only append content if there's actual text
@@ -176,13 +159,11 @@ const Messages = () => {
         }
         
         selectedFiles.forEach((file, index) => {
-          console.log('Appending file', index, ':', file.name)
           formData.append('media', file)
         })
         
         result = await sendMessage(currentConversation.user._id, formData)
       } else {
-        console.log('Handling text-only message')
         // Handle text-only message
         result = await sendMessage(currentConversation.user._id, messageInput.trim())
       }
